@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <!-- Contract with the installed app's boot loader (tv/boot/boot.ts). -->
+    <meta name="husam-boot" content="1" />
+    <title>husam.ai · TV</title>
+    <!-- Paint the background before the deferred bundle injects its styles. -->
+    <style>html{background:#07080d}</style>
+    <script src="../config.js" ></script>
+    <script defer src="../assets/index-6eGBsmes.js"></script>
+  </head>
+  <body>
+    <div class="tv">
+      <aside class="sidebar" aria-label="Sohbetler">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">husam<span class="brand-tld">.ai</span></span>
+        </div>
+
+        <button id="new-chat" class="new-chat" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          <span>Yeni sohbet</span>
+        </button>
+
+        <p class="sidebar-label" id="history-label">Geçmiş sohbetler</p>
+        <p id="history-empty" class="history-empty">Sohbetlerin burada birikecek.</p>
+        <ol id="history" class="history" aria-labelledby="history-label"></ol>
+
+        <div class="sidebar-footer">
+          <button id="settings-open" class="new-chat settings-open" type="button" hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+            <span>Ayarlar</span>
+            <span id="settings-badge" class="settings-badge" hidden></span>
+          </button>
+          <div class="status" id="status" data-tone="pending">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span id="status-text">Sunucuya bağlanıyor…</span>
+          </div>
+          <p class="footer-code" id="footer-code"></p>
+        </div>
+      </aside>
+
+      <main class="stage">
+        <!-- Shader lights are drawn here; without WebGL a static CSS backdrop shows. -->
+        <div id="ambient" class="ambient" aria-hidden="true"></div>
+
+        <div id="presence-area" class="presence-area">
+          <div id="presence" class="presence" aria-hidden="true">
+            <!-- Shown only when WebGL is unavailable. -->
+            <div class="presence-fallback"></div>
+          </div>
+          <p id="mood-label" class="mood-label" aria-live="polite"></p>
+        </div>
+
+        <!-- The card the assistant shows next to its answer (weather, a list, a value, a reminder). -->
+        <aside id="answer-card" class="answer-card" aria-live="polite" hidden></aside>
+
+        <section id="pairing" class="pairing" aria-labelledby="pairing-title" hidden>
+          <div class="pairing-qr" id="pairing-qr" role="img" aria-label="Telefon kumandası QR kodu"></div>
+          <div class="pairing-copy">
+            <h1 id="pairing-title">Telefonunla bağlan, konuşmaya başla.</h1>
+            <p class="pairing-steps">
+              QR kodu okut · Uyarı çıkarsa <em>Gelişmiş → Devam et</em> · Küreye dokun ve konuş
+            </p>
+            <p class="pairing-code" id="pairing-code" aria-live="polite">— — — — — —</p>
+            <p class="pairing-url" id="pairing-url"></p>
+          </div>
+        </section>
+
+        <section id="conversation" class="conversation" aria-label="Sohbet" hidden>
+          <div id="transcript" class="transcript" aria-live="polite"></div>
+          <p id="idle-hint" class="idle-hint">Bir şey sor, seni dinliyorum.</p>
+        </section>
+
+        <section id="fatal" class="fatal" hidden>
+          <h1>Sunucu adresi ayarlı değil</h1>
+          <p>Uygulamayı <code>pnpm tizen:build</code> ile yeniden paketle.</p>
+        </section>
+
+        <section id="taken-over" class="fatal" aria-labelledby="taken-over-title" hidden>
+          <h1 id="taken-over-title">husam.ai başka bir ekranda açıldı</h1>
+          <p>Sohbet şu an orada devam ediyor. Buraya almak için <kbd>OK</kbd> tuşuna bas.</p>
+          <button id="take-back" class="new-chat take-back" type="button">Burada devam et</button>
+        </section>
+
+        <footer class="key-hints" aria-hidden="true">
+          <span><kbd>▲</kbd><kbd>▼</kbd> Sohbet seç</span>
+          <span><kbd>OK</kbd> Aç</span>
+          <span><kbd>▶</kbd> Sil</span>
+          <span><kbd>Geri</kbd> Çıkış</span>
+        </footer>
+      </main>
+    </div>
+
+    <section
+      id="settings"
+      class="settings"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="settings-title"
+      hidden
+    >
+      <div class="settings-panel">
+        <h1 id="settings-title" class="settings-title">Ayarlar</h1>
+        <div class="settings-phone">
+          <div id="phone-qr" class="pairing-qr settings-qr" role="img" aria-label="Telefon bağlantısı QR kodu"></div>
+          <div class="settings-copy">
+            <h2 class="settings-heading">Telefonu bağla</h2>
+            <ol class="settings-steps">
+              <li>Telefon kamerasıyla QR kodu okut.</li>
+              <li>Açılan sayfada mikrofona izin ver.</li>
+              <li>Küreye dokunup konuş ya da yazarak sor; cevap TV'de.</li>
+            </ol>
+            <p class="settings-code">Kod <span id="phone-code">— — — — — —</span></p>
+            <p id="phone-status" class="status settings-status" data-tone="pending">
+              <span class="status-dot" aria-hidden="true"></span>
+              <span id="phone-status-text">Bağlantı hazırlanıyor…</span>
+            </p>
+          </div>
+        </div>
+        <div class="settings-actions">
+          <button id="phone-renew" class="new-chat settings-button" type="button">Yeni QR kodu</button>
+          <button id="settings-close" class="new-chat settings-button" type="button">Kapat</button>
+        </div>
+        <p class="settings-hint">Telefon ve TV aynı Wi-Fi'da olmalı. Yeni QR kodu bağlı telefonları çıkarır.</p>
+        <p id="app-version" class="settings-hint settings-version"></p>
+      </div>
+    </section>
+
+    <div id="toast" class="toast" role="status" hidden></div>
+  </body>
+</html>

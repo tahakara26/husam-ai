@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a0c11" />
+    <title>husam.ai · Kumanda</title>
+    <script type="module" crossorigin src="./assets/index-xDTv6y0D.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CzdGMCuo.css">
+  </head>
+  <body>
+    <div class="app">
+      <header class="app-header">
+        <div class="header-start">
+          <button
+            id="history-toggle"
+            class="header-button"
+            type="button"
+            aria-label="Geçmiş sohbetler"
+            aria-controls="history-drawer"
+            aria-expanded="false"
+            hidden
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M4 6h16M4 12h16M4 18h10" />
+            </svg>
+          </button>
+          <div class="brand">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <span class="brand-name">husam<span class="brand-tld">.ai</span></span>
+          </div>
+        </div>
+        <div class="status" id="status" data-tone="pending">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="status-text">Bağlanıyor…</span>
+        </div>
+      </header>
+
+      <main class="app-main">
+        <section id="join" class="join" aria-labelledby="join-title" hidden>
+          <h1 id="join-title">TV'ye bağlan</h1>
+          <p id="join-lead" class="join-lead">TV ekranındaki 6 haneli kodu gir ya da QR kodu okut.</p>
+          <form id="join-form" class="join-form" novalidate>
+            <label for="join-code" class="sr-only">Eşleştirme kodu</label>
+            <input
+              id="join-code"
+              class="join-input"
+              inputmode="numeric"
+              autocomplete="one-time-code"
+              maxlength="6"
+              pattern="[0-9]{6}"
+              placeholder="000000"
+              required
+            />
+            <button type="submit" class="button button--primary">Bağlan</button>
+          </form>
+          <p id="join-error" class="form-error" role="alert"></p>
+        </section>
+
+        <section id="control" class="control" aria-label="Kumanda" hidden>
+          <div id="transcript" class="transcript" aria-live="polite"></div>
+
+          <p id="voice-notice" class="notice" hidden></p>
+
+          <div class="voice-area">
+            <button id="orb" class="orb" type="button" data-state="off" aria-pressed="false">
+              <span class="orb-glow" aria-hidden="true"></span>
+              <span class="orb-core" aria-hidden="true"></span>
+              <svg
+                class="orb-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                <line x1="12" x2="12" y1="19" y2="22" />
+              </svg>
+              <span class="sr-only" id="orb-label">Sesli sohbeti başlat</span>
+            </button>
+            <p id="orb-hint" class="orb-hint" aria-live="polite">Sesli sohbeti başlatmak için dokun</p>
+          </div>
+
+          <form id="text-form" class="text-form">
+            <label for="text-input" class="sr-only">Mesaj yaz</label>
+            <input
+              id="text-input"
+              class="text-input"
+              type="text"
+              enterkeyhint="send"
+              placeholder="ya da yazarak sor…"
+              autocomplete="off"
+              maxlength="2000"
+            />
+            <button type="submit" class="icon-button" aria-label="Gönder">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="m22 2-7 20-4-9-9-4Z" />
+                <path d="M22 2 11 13" />
+              </svg>
+            </button>
+          </form>
+
+          <div class="actions">
+            <button id="stop" class="button" type="button">Durdur</button>
+            <button id="reset" class="button" type="button">Yeni sohbet</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="drawer-backdrop" class="drawer-backdrop" hidden></div>
+    <aside
+      id="history-drawer"
+      class="drawer"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="drawer-title"
+      aria-hidden="true"
+      inert
+    >
+      <div class="drawer-header">
+        <h2 id="drawer-title" class="drawer-title">Sohbetler</h2>
+        <button id="history-close" class="header-button" type="button" aria-label="Kapat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+      <button id="drawer-new-chat" class="new-chat" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+        <span>Yeni sohbet</span>
+      </button>
+      <p class="drawer-label" id="history-label">Geçmiş sohbetler</p>
+      <p id="history-empty" class="history-empty">Sohbetlerin burada birikecek.</p>
+      <ol id="history" class="history" aria-labelledby="history-label"></ol>
+      <p class="drawer-hint">Bir sohbete dokununca TV'de de açılır.</p>
+    </aside>
+
+    <div id="toast" class="toast" role="status" hidden></div>
+  </body>
+</html>
